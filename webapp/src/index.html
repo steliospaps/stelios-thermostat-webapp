@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thermostat Control</title>
+    <!-- Load the Telegram Web App Script -->
+    <script src="https://telegram.org"></script>
+    <style>
+        body { font-family: sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); text-align: center; padding: 20px; }
+        .slider { width: 80%; margin: 20px 0; }
+        .btn { background: var(--tg-theme-button-color, #2481cc); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>🌡️ Thermostat Control</h2>
+    <div id="status">Adjust target temperature:</div>
+    <input type="range" id="tempSlider" class="slider" min="15" max="30" step="0.5" value="21" oninput="updateLabel(this.value)">
+    <div id="tempLabel" style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">21.0°C</div>
+    
+    <button class="btn" onclick="saveSettings()">Apply Temperature</button>
+
+    <script>
+        // Initialize Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Open to full height
+
+        function updateLabel(val) {
+            document.getElementById('tempLabel').innerText = parseFloat(val).toFixed(1) + '°C';
+        }
+
+        function saveSettings() {
+            const targetTemp = document.getElementById('tempSlider').value;
+            const data = { target_temperature: parseFloat(targetTemp) };
+            
+            // Send data back to the local Python bot and close the Mini App
+            tg.sendData(JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
